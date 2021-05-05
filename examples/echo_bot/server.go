@@ -25,8 +25,8 @@ import (
 
 func main() {
 	bot, err := linebot.New(
-		os.Getenv("CHANNEL_SECRET"),
-		os.Getenv("CHANNEL_TOKEN"),
+		os.Getenv("84eaccd0208871cd420c5a7edd2b1cf1"),
+		os.Getenv("Mfmwo4yE66w56cLYR45YcDXGBWmA6NH0A3DBofsQVrucWN8EGqmU+LN0eOa1vReZBv1zI577HZYTUnV8SA1XBVAdSVR9DMzeRFusMOvTEOCYytzp2XDlcBRbeL3M7dNjeICuqf55V7NGQhHXRbHLOAdB04t89/1O/w1cDnyilFU="),
 	)
 	if err != nil {
 		log.Fatal(err)
