@@ -18,6 +18,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/line/line-bot-sdk-go/v7/linebot"
 )
@@ -46,7 +47,11 @@ func main() {
 			if event.Type == linebot.EventTypeMessage {
 				switch message := event.Message.(type) {
 				case *linebot.TextMessage:
-					if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.Text)).Do(); err != nil {
+					if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("uhh, waiting '5'sec."), linebot.NewTextMessage("(^^)")).Do(); err != nil {
+						log.Print(err)
+					}
+					time.Sleep(time.Second * 5)
+					if _, err = bot.PushMessage(event.Source.UserID, linebot.NewTextMessage("It's time")).Do(); err != nil {
 						log.Print(err)
 					}
 				case *linebot.StickerMessage:
