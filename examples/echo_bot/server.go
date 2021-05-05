@@ -18,15 +18,14 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 
 	"github.com/line/line-bot-sdk-go/v7/linebot"
 )
 
 func main() {
 	bot, err := linebot.New(
-		os.Getenv("84eaccd0208871cd420c5a7edd2b1cf1"),
-		os.Getenv("Mfmwo4yE66w56cLYR45YcDXGBWmA6NH0A3DBofsQVrucWN8EGqmU+LN0eOa1vReZBv1zI577HZYTUnV8SA1XBVAdSVR9DMzeRFusMOvTEOCYytzp2XDlcBRbeL3M7dNjeICuqf55V7NGQhHXRbHLOAdB04t89/1O/w1cDnyilFU="),
+		"8cffe00334fcd57e073f7691cb773af3",
+		"61967pgiDfx/Kl7j/pwigA+s9TCvC7NyDrDhg6M3l5WNKpwgTJAHZCPKIC5nYa38Bv1zI577HZYTUnV8SA1XBVAdSVR9DMzeRFusMOvTEOBizl3WOvuARK8rSEyd08gYqxJWzfJ5E+AwrMh4n+z5+AdB04t89/1O/w1cDnyilFU=",
 	)
 	if err != nil {
 		log.Fatal(err)
@@ -62,7 +61,7 @@ func main() {
 	})
 	// This is just sample code.
 	// For actual use, you must support HTTPS by using `ListenAndServeTLS`, a reverse proxy or something else.
-	if err := http.ListenAndServe(":"+os.Getenv("PORT"), nil); err != nil {
+	if err := http.ListenAndServe(":8080", nil); err != nil {
 		log.Fatal(err)
 	}
 }
