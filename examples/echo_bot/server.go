@@ -19,6 +19,8 @@ import (
 	"log"
 	"net/http"
 	"time"
+	"regexp"
+	"strconv"
 
 	"github.com/line/line-bot-sdk-go/v7/linebot"
 )
@@ -31,7 +33,6 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	// Setup HTTP Server for receiving requests from LINE platform
 	http.HandleFunc("/callback", func(w http.ResponseWriter, req *http.Request) {
 		events, err := bot.ParseRequest(req)
@@ -47,13 +48,31 @@ func main() {
 			if event.Type == linebot.EventTypeMessage {
 				switch message := event.Message.(type) {
 				case *linebot.TextMessage:
-					if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("uhh, waiting '5'sec."), linebot.NewTextMessage("(^^)")).Do(); err != nil {
+				r := regexp.MustCompile(message.Text)
+				if r.MatchString(`[0-9]`) == true{
+					var num = ParseLeadingInt(message.Text)
+					if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("waiting "+strconv.Itoa(num)+"sec."), linebot.NewTextMessage("(^^)")).Do(); err != nil {
+						log.Print(err)
+					}
+//					time.Sleep(time.Second * num)
+					if _, err = bot.PushMessage(event.Source.UserID, linebot.NewTextMessage("finish!!")).Do(); err != nil {
+						log.Print(err)
+					}
+				}
+
+				if r.MatchString("aaa"){
+					if _, err = bot.PushMessage(event.Source.UserID, linebot.NewTextMessage(message_check(message.Text))).Do(); err != nil {
+						log.Print(err)
+					}
+				} else {
+					if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("waiting '5'sec."), linebot.NewTextMessage("(^^)")).Do(); err != nil {
 						log.Print(err)
 					}
 					time.Sleep(time.Second * 5)
 					if _, err = bot.PushMessage(event.Source.UserID, linebot.NewTextMessage("It's time")).Do(); err != nil {
 						log.Print(err)
 					}
+				}
 				case *linebot.StickerMessage:
 					replyMessage := fmt.Sprintf(
 						"sticker id is %s, stickerResourceType is %s", message.StickerID, message.StickerResourceType)
@@ -69,4 +88,22 @@ func main() {
 	if err := http.ListenAndServe(":8080", nil); err != nil {
 		log.Fatal(err)
 	}
+}
+
+
+func message_check(s string) string{
+	r := regexp.MustCompile(s)
+	if r.MatchString("すし"){
+		return "すし"
+	} else {
+		return s
+	}
+}
+
+var rexLeadingDigits = regexp.MustCompile(`\d+`)
+
+func ParseLeadingInt(s string) int {
+    rex := rexLeadingDigits.Copy()
+    value, _ := strconv.Atoi(rex.FindString(s))
+    return value
 }
